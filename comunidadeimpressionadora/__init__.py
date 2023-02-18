@@ -22,15 +22,10 @@ login_manager.login_view = 'login'
 login_manager.login_message_category = 'alert-info'
 
 from comunidadeimpressionadora import models
-#
-#engine = sqlalchemy.create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
-#
-#if not engine.has_table("usuario"):
-    #with app.app_context():
-database.drop_all()
-database.create_all()
+
+with app.app_context():
+    database.drop_all()
+    database.create_all()
 print('Base de Dados Criada')
-#else:
-    #print('Base de Dados Existente')
 
 from comunidadeimpressionadora import routes
