@@ -14,8 +14,8 @@ app.config['SECRET_KEY'] = '691f1580414a0bfc0525ad6d32f53563exit'
 #     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
 # else:
 #     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///comunidade.db'
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://comunidade_ktu9_user:HFDdVcjFSvieNvhnB2fHFtQMCl21y0jz@dpg-cfo24birrk0239gabavg-a.oregon-postgres.render.com/comunidade_ktu9"
-# postgres://comunidade_ktu9_user:HFDdVcjFSvieNvhnB2fHFtQMCl21y0jz@dpg-cfo24birrk0239gabavg-a.oregon-postgres.render.com/comunidade_ktu9
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://comunidade_dbj7_user:ud9ADfi1mCioBDCnNtvBg53fotcFntf5@dpg-cfoh9e14rebfdaopa3jg-a.oregon-postgres.render.com/comunidade_dbj7"
+
 
 
 database = SQLAlchemy(app)
@@ -25,9 +25,9 @@ login_manager.login_view = 'login'
 login_manager.login_message_category = 'alert-info'
 
 # from comunidadeimpressionadora import models
-# 
+#
 # engine = sqlalchemy.create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
-# 
+#
 # if not engine.has_table("usuario"):
 #     with app.app_context():
 #         database.drop_all()
