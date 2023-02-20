@@ -10,11 +10,11 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = '691f1580414a0bfc0525ad6d32f53563exit'
 
-#if os.getenv("DATABASE_URL"):
-    #app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
-#else:
-    #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///comunidade.db'
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://comunidade_dbj7_user:ud9ADfi1mCioBDCnNtvBg53fotcFntf5@dpg-cfoh9e14rebfdaopa3jg-a.oregon-postgres.render.com/comunidade_dbj7"
+if os.getenv("DATABASE_URL"):
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///comunidade.db'
+#app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://comunidade_dbj7_user:ud9ADfi1mCioBDCnNtvBg53fotcFntf5@dpg-cfoh9e14rebfdaopa3jg-a.oregon-postgres.render.com/comunidade_dbj7"
 
 database = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
