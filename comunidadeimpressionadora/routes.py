@@ -1,11 +1,12 @@
 from flask import render_template, redirect, url_for, flash, request, abort
-from comunidadeimpressionadora import app, database, bcrypt
+from comunidadeimpressionadora import app, database
 from comunidadeimpressionadora.forms import FormLogin, FormCriarConta, FormEditarPerfil, FormCriarPost
 from comunidadeimpressionadora.models import Usuario, Post
 from flask_login import login_user, logout_user, current_user, login_required
 import secrets
 import os
 from PIL import Image
+import bcrypt
 
 @app.route('/')
 def home():
@@ -31,11 +32,16 @@ def login():
     form_login = FormLogin()
     form_criarconta = FormCriarConta()
 
+
     # Formulário de Login
+
     if form_login.validate_on_submit() and 'botao_submit_login' in request.form:
         usuario = Usuario.query.filter_by(email=form_login.email.data).first()
+
         # compara se o usuario existe e se a senha que foi preenchida no formulário bate com a do banco de dados.
-        if usuario and bcrypt.check_password_hash(usuario.senha, form_login.senha.data).decode('utf-8'):
+        # if usuario and bcrypt.check_password_hash(usuario.senha, form_login.senha.data):
+
+        if usuario and bcrypt.hashpw(form_login.senha.data.encode('utf-8'), usuario.senha):
             login_user(usuario, remember=form_login.lembrar_dados.data)
             flash(f'Login feito com sucesso no e-mail: {form_login.email.data}', 'alert-success')
             # pega o parâmetro do link e direciona para a url next
@@ -49,7 +55,8 @@ def login():
 
     # Formulário Criar Conta
     if form_criarconta.validate_on_submit() and 'botao_submit_criarconta' in request.form:
-        senha_cript = bcrypt.generate_password_hash(form_criarconta.senha.data)
+        # senha_cript = bcrypt.generate_password_hash(form_criarconta.senha.data)
+        senha_cript = bcrypt.hashpw(form_criarconta.senha.data.encode('utf-8'), bcrypt.gensalt())
         usuario = Usuario(username=form_criarconta.username.data, email=form_criarconta.email.data, senha=senha_cript)
         database.session.add(usuario)
         database.session.commit()
