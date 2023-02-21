@@ -44,7 +44,7 @@ def login():
         # inseri o bcrypt.hashpw para funcionar no servidor Render.com
         senha_form = form_login.senha.data
 
-        if usuario and bcrypt.checkpw(senha_form.encode('utf-8'), usuario.senha):
+        if usuario and bcrypt.checkpw(senha_form.encode('utf-8'), usuario.senha.encode('utf-8'):
             login_user(usuario, remember=form_login.lembrar_dados.data)
             flash(f'Login feito com sucesso no e-mail: {form_login.email.data}', 'alert-success')
             # pega o parâmetro do link e direciona para a url next
