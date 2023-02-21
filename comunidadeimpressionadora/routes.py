@@ -7,6 +7,7 @@ import secrets
 import os
 from PIL import Image
 import bcrypt
+import hashlib
 
 @app.route('/')
 def home():
@@ -40,8 +41,10 @@ def login():
 
         # compara se o usuario existe e se a senha que foi preenchida no formulário bate com a do banco de dados.
         # if usuario and bcrypt.check_password_hash(usuario.senha, form_login.senha.data):
-
-        if usuario and bcrypt.hashpw(form_login.senha.data.encode('utf-8'), usuario.senha):
+        # inseri o bcrypt.hashpw para funcionar no servidor Render.com
+        senha_form = form_login.senha.data
+        senha_form = hashlib.sha256(senha_form.encode('utf-8')).hexdigest()
+        if usuario and bcrypt.hashpw(senha_form.encode('utf-8'), usuario.senha):
             login_user(usuario, remember=form_login.lembrar_dados.data)
             flash(f'Login feito com sucesso no e-mail: {form_login.email.data}', 'alert-success')
             # pega o parâmetro do link e direciona para a url next
@@ -56,7 +59,11 @@ def login():
     # Formulário Criar Conta
     if form_criarconta.validate_on_submit() and 'botao_submit_criarconta' in request.form:
         # senha_cript = bcrypt.generate_password_hash(form_criarconta.senha.data)
+        # inseri o bcrypt.hashpw para funcionar no servidor Render.com
+
         senha_cript = bcrypt.hashpw(form_criarconta.senha.data.encode('utf-8'), bcrypt.gensalt())
+
+
         usuario = Usuario(username=form_criarconta.username.data, email=form_criarconta.email.data, senha=senha_cript)
         database.session.add(usuario)
         database.session.commit()
