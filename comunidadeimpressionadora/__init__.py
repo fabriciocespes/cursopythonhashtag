@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_bcrypt import Bcrypt
+#from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 import os
 import sqlalchemy as sa
@@ -17,7 +17,7 @@ else:
 #app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://comunidade_dbj7_user:ud9ADfi1mCioBDCnNtvBg53fotcFntf5@dpg-cfoh9e14rebfdaopa3jg-a.oregon-postgres.render.com/comunidade_dbj7"
 
 database = SQLAlchemy(app)
-bcrypt = Bcrypt(app)
+#bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'alert-info'
