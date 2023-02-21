@@ -42,9 +42,9 @@ def login():
         # compara se o usuario existe e se a senha que foi preenchida no formulário bate com a do banco de dados.
         # if usuario and bcrypt.check_password_hash(usuario.senha, form_login.senha.data):
         # inseri o bcrypt.hashpw para funcionar no servidor Render.com
-        senha_form = form_login.senha.data.encode('utf-8')
+        senha_form = form_login.senha.data
 
-        if usuario and bcrypt.checkpw(usuario.senha, senha_form):
+        if usuario and bcrypt.checkpw(senha_form.encode('utf-8'), usuario.senha):
             login_user(usuario, remember=form_login.lembrar_dados.data)
             flash(f'Login feito com sucesso no e-mail: {form_login.email.data}', 'alert-success')
             # pega o parâmetro do link e direciona para a url next
