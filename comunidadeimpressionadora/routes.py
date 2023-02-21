@@ -9,6 +9,7 @@ from PIL import Image
 import bcrypt
 import hashlib
 
+
 @app.route('/')
 def home():
     # em ordem decrescente
@@ -33,7 +34,6 @@ def login():
     form_login = FormLogin()
     form_criarconta = FormCriarConta()
 
-
     # Formulário de Login
 
     if form_login.validate_on_submit() and 'botao_submit_login' in request.form:
@@ -42,9 +42,9 @@ def login():
         # compara se o usuario existe e se a senha que foi preenchida no formulário bate com a do banco de dados.
         # if usuario and bcrypt.check_password_hash(usuario.senha, form_login.senha.data):
         # inseri o bcrypt.hashpw para funcionar no servidor Render.com
-        senha_form = form_login.senha.data
-        
-        if usuario and bcrypt.hashpw(senha_form, usuario.senha):
+        senha_form = form_login.senha.data.encode('utf-8')
+
+        if usuario and bcrypt.checkpw(senha_form, usuario.senha):
             login_user(usuario, remember=form_login.lembrar_dados.data)
             flash(f'Login feito com sucesso no e-mail: {form_login.email.data}', 'alert-success')
             # pega o parâmetro do link e direciona para a url next
@@ -63,13 +63,13 @@ def login():
 
         senha_cript = bcrypt.hashpw(form_criarconta.senha.data.encode('utf-8'), bcrypt.gensalt())
 
-
         usuario = Usuario(username=form_criarconta.username.data, email=form_criarconta.email.data, senha=senha_cript)
         database.session.add(usuario)
         database.session.commit()
         flash(f'Conta criada para o e-mail: {form_criarconta.email.data}', 'alert-success')
         return redirect(url_for('home'))
     return render_template('login.html', form_login=form_login, form_criarconta=form_criarconta)
+
 
 @app.route('/sair')
 @login_required
@@ -78,11 +78,13 @@ def sair():
     flash(f'Logout Feito com Sucesso.', 'alert-success')
     return redirect(url_for('login'))
 
+
 @app.route('/perfil')
 @login_required
 def perfil():
     foto_perfil = url_for('static', filename='fotos_perfil/{}'.format(current_user.foto_perfil))
     return render_template('perfil.html', foto_perfil=foto_perfil)
+
 
 @app.route('/post/criar', methods=['GET', 'POST'])
 @login_required
@@ -95,6 +97,7 @@ def criar_post():
         flash('Post Criado com Sucesso...', 'alert-success')
         return redirect(url_for('home'))
     return render_template('criarpost.html', form=form)
+
 
 def salvar_imagem(imagem):
     # adicionar um código aleatório ao nome da imagem (importar biblioteca secrets e os)
@@ -115,6 +118,7 @@ def salvar_imagem(imagem):
 
     # mudar o campo foto_perfil do usuário para o novo nome da imagem
     return nome_arquivo
+
 
 def atualizar_cursos(form):
     lista_cursos = []
@@ -153,7 +157,8 @@ def editar_perfil():
         form.email.data = current_user.email
         form.username.data = current_user.username
     foto_perfil = url_for('static', filename='fotos_perfil/{}'.format(current_user.foto_perfil))
-    return  render_template('editarperfil.html', foto_perfil=foto_perfil, form=form)
+    return render_template('editarperfil.html', foto_perfil=foto_perfil, form=form)
+
 
 # criando uma página dinâmica
 @app.route('/post/<post_id>', methods=['GET', 'POST'])
@@ -179,6 +184,7 @@ def exibir_post(post_id):
     else:
         form = None
     return render_template('post.html', post=post, form=form)
+
 
 # Excluindo o post
 
