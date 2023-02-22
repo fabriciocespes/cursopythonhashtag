@@ -44,11 +44,8 @@ def login():
         # inseri o bcrypt.hashpw para funcionar no servidor Render.com
 
         senha_form = form_login.senha.data
-        print(senha_form)
-        print(usuario.senha)
         senha_entrada = sha256(senha_form.encode()).hexdigest()
-        senha_banco = usuario.senha[0:]
-        print(senha_banco)
+        senha_banco = usuario.senha[0:]        
 
         if usuario and senha_entrada == senha_banco:
             login_user(usuario, remember=form_login.lembrar_dados.data)
@@ -69,8 +66,7 @@ def login():
         # senha_cript = bcrypt.hashpw(form_criarconta.senha.data.encode('utf-8'), bcrypt.gensalt())
 
         # usando sha256 da hashlib para criptografar a senha que será armazenada no banco de dados
-        senha_cript = sha256(form_criarconta.senha.data.encode()).hexdigest()
-        print(senha_cript)
+        senha_cript = sha256(form_criarconta.senha.data.encode()).hexdigest()        
         usuario = Usuario(username=form_criarconta.username.data, email=form_criarconta.email.data, senha=senha_cript)
         database.session.add(usuario)
         database.session.commit()
