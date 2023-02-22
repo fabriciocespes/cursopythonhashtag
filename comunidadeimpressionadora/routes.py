@@ -45,7 +45,7 @@ def login():
 
         senha_form = form_login.senha.data
         print(usuario.senha)
-        senha_entrada = sha256(senha_form.encode('utf-8')).digest()
+        senha_entrada = sha256(senha_form.encode()).hexdigest()
         print(senha_entrada)
 
         if usuario and senha_entrada == usuario.senha:
@@ -67,7 +67,7 @@ def login():
         # senha_cript = bcrypt.hashpw(form_criarconta.senha.data.encode('utf-8'), bcrypt.gensalt())
 
         # usando sha256 da hashlib para criptografar a senha que será armazenada no banco de dados
-        senha_cript = sha256(form_criarconta.senha.data.encode('utf-8')).digest()
+        senha_cript = sha256(form_criarconta.senha.data.encode()).hexdigest()
         print(senha_cript)
         usuario = Usuario(username=form_criarconta.username.data, email=form_criarconta.email.data, senha=senha_cript)
         database.session.add(usuario)
