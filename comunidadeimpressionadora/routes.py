@@ -6,8 +6,8 @@ from flask_login import login_user, logout_user, current_user, login_required
 import secrets
 import os
 from PIL import Image
-import bcrypt
-import hashlib
+# import bcrypt
+from hashlib import sha256
 
 
 @app.route('/')
@@ -42,11 +42,13 @@ def login():
         # compara se o usuario existe e se a senha que foi preenchida no formulário bate com a do banco de dados.
         # if usuario and bcrypt.check_password_hash(usuario.senha, form_login.senha.data):
         # inseri o bcrypt.hashpw para funcionar no servidor Render.com
+
         senha_form = form_login.senha.data
         print(usuario.senha)
-        teste = bcrypt.checkpw(senha_form.encode('utf-8'), usuario.senha)
-        print(teste)
-        if usuario and teste:
+        senha_entrada = sha256(senha_form.encode()).digest()
+        print(senha_entrada)
+
+        if usuario and senha_entrada == usuario.senha:
             login_user(usuario, remember=form_login.lembrar_dados.data)
             flash(f'Login feito com sucesso no e-mail: {form_login.email.data}', 'alert-success')
             # pega o parâmetro do link e direciona para a url next
@@ -62,9 +64,11 @@ def login():
     if form_criarconta.validate_on_submit() and 'botao_submit_criarconta' in request.form:
         # senha_cript = bcrypt.generate_password_hash(form_criarconta.senha.data)
         # inseri o bcrypt.hashpw para funcionar no servidor Render.com
+        # senha_cript = bcrypt.hashpw(form_criarconta.senha.data.encode('utf-8'), bcrypt.gensalt())
 
-        senha_cript = bcrypt.hashpw(form_criarconta.senha.data.encode('utf-8'), bcrypt.gensalt())
-
+        # usando sha256 da hashlib para criptografar a senha que será armazenada no banco de dados
+        senha_cript = sha256(form_criarconta.senha.data.encode()).digest()
+        print(senha_cript)
         usuario = Usuario(username=form_criarconta.username.data, email=form_criarconta.email.data, senha=senha_cript)
         database.session.add(usuario)
         database.session.commit()
