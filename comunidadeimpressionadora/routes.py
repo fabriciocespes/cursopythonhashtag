@@ -47,7 +47,7 @@ def login():
         print(senha_form)
         print(usuario.senha)
         senha_entrada = sha256(senha_form.encode()).hexdigest()
-        senha_banco = usuario.senha[2:]
+        senha_banco = usuario.senha[0:]
         print(senha_banco)
 
         if usuario and senha_entrada == senha_banco:
